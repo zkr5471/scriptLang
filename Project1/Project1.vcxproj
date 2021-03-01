@@ -142,12 +142,14 @@
     <ClCompile Include="allocator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.cpp" />
+    <ClCompile Include="runner.cpp" />
     <ClCompile Include="tokenize.cpp" />
     <ClCompile Include="types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="allocator.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="runner.h" />
     <ClInclude Include="tokenize.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
