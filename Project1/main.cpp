@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "tokenize.h"
+#include "parser.h"
 #include "allocator.h"
 
 using namespace Xscript;
@@ -17,13 +18,13 @@ void print_token(Token *tok)
 int main()
 {
 	string str =
-		"1234 12 Hello 'A' 3.14  02";
+		"1 + 2 * 3";
 
 	try
 	{
 		Token *tok = tokenize(std::move(str));
 
-		
+		Node *nd = Parser::parse(tok);
 
 	}
 	catch( ... )

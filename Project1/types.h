@@ -59,4 +59,25 @@ namespace Xscript
 		size_t pos = 0;
 
 	};
+
+	struct Node
+	{
+		enum class Type
+		{
+			Add,
+			Sub,
+			Mul,
+			Div,
+
+			Value
+		};
+
+		Type type;
+		Node *lhs = nullptr;
+		Node *rhs = nullptr;
+		Token *tok = nullptr;
+
+		size_t varIndex = 0;
+
+	};
 }
