@@ -111,7 +111,7 @@ namespace Xscript
 						return nd;
 					}
 
-					int64_t find = find_variable(g_tok->str);
+					int64_t find = find_variable(nd->tok->str);
 
 					if( find == -1 )
 					{
