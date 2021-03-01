@@ -103,6 +103,7 @@ namespace Xscript
 
 					cur->type = Token::Type::Float;
 					cur->value.v_Float = std::stof(cur->str = str);
+					cur->value.type = Value::Type::Float;
 				}
 			}
 
@@ -141,6 +142,7 @@ namespace Xscript
 
 				cur = NewToken(Token::Type::Char, cur, pos);
 				cur->str += cur->value.v_Char = peek();
+				cur->value.type = Value::Type::Char;
 
 				next();
 

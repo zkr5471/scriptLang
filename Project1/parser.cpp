@@ -48,7 +48,14 @@ namespace Xscript
 
 		Node *primary()
 		{
-			if( g_tok->type == Token::Type::Int )
+			if( consume("(") )
+			{
+				Node *x = expr();
+				expect(")");
+				return x;
+			}
+
+			if( g_tok->type == Token::Type::Int || g_tok->type == Token::Type::Char || g_tok->type == Token::Type::Float )
 			{
 				Node *nd = NewNode();
 				nd->tok = g_tok;

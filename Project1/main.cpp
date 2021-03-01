@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "tokenize.h"
 #include "parser.h"
@@ -16,18 +17,42 @@ void print_token(Token *tok)
 	}
 }
 
+string openfile(const char *path)
+{
+	std::ifstream ifs(path);
+	string line, ret;
+
+	if( ifs.fail() )
+	{
+		std::cout << "cannot open file.";
+		throw 0;
+	}
+
+	while( std::getline(ifs, line) )
+	{
+		ret += line + '\n';
+	}
+
+	if( ret.empty() )
+	{
+		std::cout << "empty source file.";
+		throw 0;
+	}
+
+	return std::move(ret);
+}
+
 int main()
 {
-	string str =
-		"10403 + 4539 + 982828";
+	string src = std::move(openfile("C:/Users/mrzkr/Desktop/test.txt"));
 
 	try
 	{
-		Token *tok = tokenize(std::move(str));
+		Token *tok = tokenize(std::move(src));
 
 		Node *nd = Parser::parse(tok);
 
-		Value val = Runner::run_expr(nd);
+		Value val = run_expr(nd);
 
 		std::cout << val.v_Int << '\n';
 	}
