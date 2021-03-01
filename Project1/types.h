@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "utils.h"
 
 #define  ALART  { size_t L=__LINE__; \
   char const* s=__FILE__; \
