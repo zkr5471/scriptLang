@@ -58,7 +58,13 @@ namespace Xscript
 			delete ptr;
 		}
 
+		for( auto &&ptr : nodes )
+		{
+			delete ptr;
+		}
+
 		tokens.clear();
+		nodes.clear();
 	}
 
 }
