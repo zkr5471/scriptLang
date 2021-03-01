@@ -2,6 +2,7 @@
 
 #include "tokenize.h"
 #include "parser.h"
+#include "runner.h"
 #include "allocator.h"
 
 using namespace Xscript;
@@ -18,7 +19,7 @@ void print_token(Token *tok)
 int main()
 {
 	string str =
-		"1 + 2 * 3";
+		"10403 + 4539 + 982828";
 
 	try
 	{
@@ -26,6 +27,9 @@ int main()
 
 		Node *nd = Parser::parse(tok);
 
+		Value val = Runner::run_expr(nd);
+
+		std::cout << val.v_Int << '\n';
 	}
 	catch( ... )
 	{

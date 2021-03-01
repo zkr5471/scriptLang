@@ -27,7 +27,26 @@ namespace Xscript
 					{
 						case Node::Type::Add:
 						{
+							if( lhs.type == Value::Type::Array )
+							{
+								if( rhs.type == Value::Type::Array )
+									lhs.list += rhs.list;
+								else
+									lhs.list.push_back(rhs);
 
+								return lhs;
+							}
+							else if( rhs.type == Value::Type::Array )
+								Error(node->tok->pos, "type mismatch");
+
+							switch( lhs.type )
+							{
+								case Value::Type::Int:
+									lhs.v_Int += rhs.v_Int;
+									break;
+							}
+
+							break;
 						}
 					}
 
