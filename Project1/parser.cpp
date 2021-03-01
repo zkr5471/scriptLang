@@ -332,6 +332,12 @@ namespace Xscript
 				x = NewNode(Node::Type::Assign, x, assign(), csm_tok);
 			else if( consume("+=") )
 				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::Add, x, assign()), csm_tok);
+			else if( consume("-=") )
+				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::Sub, x, assign()), csm_tok);
+			else if( consume("*=") )
+				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::Mul, x, assign()), csm_tok);
+			else if( consume("/=") )
+				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::Div, x, assign()), csm_tok);
 
 			return x;
 		}
