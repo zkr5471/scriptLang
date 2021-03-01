@@ -2,9 +2,8 @@
 
 namespace Xscript
 {
-	namespace Runner
-	{
-		Value run_expr(Node *node);
 
-	}
+	Value run_expr(Node *node);
+
+
 }

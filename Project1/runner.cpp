@@ -4,7 +4,7 @@
 
 namespace Xscript
 {
-	Value Runner::run_expr(Node *node)
+	Value run_expr(Node *node)
 	{
 		if( node == nullptr )
 			return { };
