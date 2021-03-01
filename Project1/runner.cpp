@@ -4,6 +4,8 @@
 
 namespace Xscript
 {
+	extern std::vector<Value> variables;
+
 	void _adjust_ValueType(Value &_L, Value &_R)
 	{
 		if( _L.type == Value::Type::Array || _R.type == Value::Type::Array )

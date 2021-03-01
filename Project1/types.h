@@ -69,8 +69,32 @@ namespace Xscript
 			Sub,
 			Mul,
 			Div,
+			Mod,
+			ShiftL,
+			ShiftR,
+			Bigger,
+			BiggerOrEqual,
+			Equal,
+			NotEqaul,
+			BitAND,
+			BitNOT,
+			BitXOR,
+			BitOR,
+			Assign,
+			
+			Block,
+			If,
+			For,
+			Foreach,
+			While,
 
-			Value
+
+			Value,
+			Variable,
+			Callfunc,
+			IndexRef,
+
+			MemberAccess
 		};
 
 		Type type;
@@ -80,5 +104,6 @@ namespace Xscript
 
 		size_t varIndex = 0;
 
+		std::vector<Node *> list;
 	};
 }

@@ -17,6 +17,13 @@ namespace Xscript
 		Node *unary();
 		Node *mul();
 		Node *add();
+		Node *shift();
+		Node *compare();
+		Node *equal();
+		Node *BitAND();
+		Node *BitXOR();
+		Node *BitOR();
+		Node *assign();
 		Node *expr();
 		Node *stmt();
 
