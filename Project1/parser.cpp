@@ -69,56 +69,62 @@ namespace Xscript
 				return x;
 			}
 
-			if( g_tok->type == Token::Type::Int || g_tok->type == Token::Type::Char || g_tok->type == Token::Type::Float )
+			switch( g_tok->type )
 			{
-				Node *nd = NewNode();
-				nd->tok = g_tok;
-
-				next();
-				return nd;
-			}
-
-			if( g_tok->type == Token::Type::Ident )
-			{
-				Node *nd = NewNode(Node::Type::Variable);
-				nd->tok = g_tok;
-				
-				next();
-
-				if( consume("(") )
+				case Token::Type::Int:
+				case Token::Type::Float:
+				case Token::Type::Char:
+				case Token::Type::String:
 				{
-					nd->type = Node::Type::Callfunc;
+					Node *nd = NewNode();
+					nd->tok = g_tok;
 
-					if( !consume(")") )
-					{
-						while( check() )
-						{
-							nd->list.push_back(expr());
-							
-							if( consume(",") )
-								continue;
-
-							expect(")");
-							break;
-						}
-					}
-
+					next();
 					return nd;
 				}
 
-				int64_t find = find_variable(g_tok->str);
-
-				if( find == -1 )
+				case Token::Type::Ident:
 				{
-					Value var;
-					var.name = g_tok->str;
-					
-					find = variables.size();
-					variables.push_back(var);
-				}
+					Node *nd = NewNode(Node::Type::Variable);
+					nd->tok = g_tok;
 
-				nd->varIndex = find;
-				return nd;
+					next();
+
+					if( consume("(") )
+					{
+						nd->type = Node::Type::Callfunc;
+
+						if( !consume(")") )
+						{
+							while( check() )
+							{
+								nd->list.push_back(expr());
+
+								if( consume(",") )
+									continue;
+
+								expect(")");
+								break;
+							}
+						}
+
+						return nd;
+					}
+
+					int64_t find = find_variable(g_tok->str);
+
+					if( find == -1 )
+					{
+						Value var;
+						var.name = g_tok->str;
+
+						find = variables.size();
+						variables.push_back(var);
+					}
+
+					nd->varIndex = find;
+					return nd;
+				}
 			}
 
 			Error(g_tok->pos, "syntax error");
@@ -126,15 +132,32 @@ namespace Xscript
 
 		Node *indexRef()
 		{
-			return primary();
+			Node *x = primary();
+
+			while( check() )
+			{
+				if( consume("[") )
+				{
+					x = NewNode(Node::Type::IndexRef, x, expr());
+					expect("]");
+				}
+				else
+					break;
+			}
+
+			return x;
 		}
 
 		Node *unary()
 		{
 			if( consume("-") )
-			{
 				return NewNode(Node::Type::Sub, NewNode_Int(0), primary());
-			}
+			
+			if( consume("!") )
+				return NewNode(Node::Type::Not, primary(), nullptr);
+
+			if( consume("~") )
+				return NewNode(Node::Type::BitNOT, primary(), nullptr);
 
 			return primary();
 		}
@@ -275,9 +298,35 @@ namespace Xscript
 			return x;
 		}
 
-		Node *assign()
+		Node *And()
 		{
 			Node *x = BitOR();
+
+			while( check() )
+				if( consume("&&") )
+					x = NewNode(Node::Type::Not, x, BitOR(), csm_tok);
+				else
+					break;
+
+			return x;
+		}
+		
+		Node *Or()
+		{
+			Node *x = And();
+
+			while( check() )
+				if( consume("||") )
+					x = NewNode(Node::Type::Or, x, And(), csm_tok);
+				else
+					break;
+
+			return x;
+		}
+
+		Node *assign()
+		{
+			Node *x = Or();
 
 			if( consume("=") )
 				x = NewNode(Node::Type::Assign, x, assign(), csm_tok);

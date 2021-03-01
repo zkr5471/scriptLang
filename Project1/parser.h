@@ -23,6 +23,8 @@ namespace Xscript
 		Node *BitAND();
 		Node *BitXOR();
 		Node *BitOR();
+		Node *And();
+		Node *Or();
 		Node *assign();
 		Node *expr();
 		Node *stmt();

@@ -82,6 +82,10 @@ namespace Xscript
 			BitOR,
 			Assign,
 			
+			Not,
+			And,
+			Or,
+
 			Block,
 			If,
 			For,
@@ -89,6 +93,7 @@ namespace Xscript
 			While,
 
 
+			Array,
 			Value,
 			Variable,
 			Callfunc,

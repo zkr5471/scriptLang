@@ -133,6 +133,16 @@ namespace Xscript
 				next();
 				cur = NewToken(Token::Type::String, cur, pos);
 				cur->str = str;
+
+				cur->value.type = Value::Type::Array;
+
+				for( auto &&c : str )
+				{
+					Value val;
+					val.type = Value::Type::Char;
+					val.v_Char = c;
+					cur->value.list.push_back(val);
+				}
 			}
 
 			// character
