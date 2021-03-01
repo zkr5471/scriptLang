@@ -5,19 +5,17 @@
 
 namespace Xscript
 {
-	namespace _allocated
+	namespace
 	{
-		static std::vector<Token *> tokens;
-		static std::vector<Node *> nodes;
+		std::vector<Token *> tokens;
+		std::vector<Node *> nodes;
 	}
-
-	using namespace _allocated;
 
 	Token *NewToken(Token::Type type)
 	{
 		Token *tok = new Token;
 		tok->type = type;
-		
+
 		tokens.push_back(tok);
 		return tok;
 	}
@@ -26,13 +24,13 @@ namespace Xscript
 	{
 		Token *tok = NewToken(type);
 		tok->pos = pos;
-		
+
 		if( back )
 			back->next = tok;
 
 		return tok;
 	}
-	
+
 	Node *NewNode(Node::Type type)
 	{
 		Node *nd = new Node;
