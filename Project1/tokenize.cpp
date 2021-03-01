@@ -12,6 +12,10 @@ namespace Xscript
 
 		char const *punctuators[] =
 		{
+			"+=",
+			"-=",
+			"*=",
+			"/=",
 			">>",
 			"<<",
 			"==",

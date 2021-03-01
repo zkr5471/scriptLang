@@ -52,9 +52,9 @@ int main()
 
 		Node *nd = Parser::parse(tok);
 
-		Value val = run_expr(nd);
+	//	Value val = run_expr(nd);
 
-		std::cout << val.v_Int << '\n';
+	//	std::cout << val.v_Int << '\n';
 	}
 	catch( ... )
 	{
