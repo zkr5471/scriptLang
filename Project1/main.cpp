@@ -42,6 +42,10 @@ string openfile(const char *path)
 	return std::move(ret);
 }
 
+namespace Xscript {
+	extern std::vector<Value> variables;
+}
+
 int main()
 {
 	string src = std::move(openfile("C:/Users/mrzkr/Desktop/test.txt"));
@@ -52,9 +56,10 @@ int main()
 
 		Node *nd = Parser::parse(tok);
 
-	//	Value val = run_expr(nd);
-
-	//	std::cout << val.v_Int << '\n';
+		for( auto &&i : variables )
+		{
+			std::cout << i.name << ": " << i << '\n';
+		}
 	}
 	catch( ... )
 	{

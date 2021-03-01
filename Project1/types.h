@@ -37,6 +37,9 @@ namespace Xscript
 		Value *var_ptr = nullptr;
 
 		Value &operator = (Value const &value);
+
+		bool is_string() const;
+
 	};
 
 	struct Token
@@ -111,4 +114,6 @@ namespace Xscript
 
 		std::vector<Node *> list;
 	};
+
+	std::ostream &operator << (std::ostream &ost, Value const &val);
 }

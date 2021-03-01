@@ -116,7 +116,7 @@ namespace Xscript
 					if( find == -1 )
 					{
 						Value var;
-						var.name = g_tok->str;
+						var.name = nd->tok->str;
 
 						find = variables.size();
 						variables.push_back(var);
