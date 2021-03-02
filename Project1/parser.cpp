@@ -151,15 +151,15 @@ namespace Xscript
 		Node *unary()
 		{
 			if( consume("-") )
-				return NewNode(Node::Type::Sub, NewNode_Int(0), primary());
+				return NewNode(Node::Type::Sub, NewNode_Int(0), indexRef());
 			
 			if( consume("!") )
-				return NewNode(Node::Type::Not, primary(), nullptr);
+				return NewNode(Node::Type::Not, indexRef(), nullptr);
 
 			if( consume("~") )
-				return NewNode(Node::Type::BitNOT, primary(), nullptr);
+				return NewNode(Node::Type::BitNOT, indexRef(), nullptr);
 
-			return primary();
+			return indexRef();
 		}
 
 		Node *mul()
