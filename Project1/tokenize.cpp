@@ -222,6 +222,7 @@ namespace Xscript
 		}
 
 		NewToken(Token::Type::End, cur, srcpos);
+		source.clear();
 
 		return top.next;
 	}
