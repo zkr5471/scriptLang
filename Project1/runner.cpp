@@ -96,7 +96,13 @@ namespace Xscript
 				if( index.v_Int < 0 || index.v_Int >= arr.list.size() )
 					Error(node->tok->pos, "subscript out of range");
 
-				return arr.list[index.v_Int];
+				Value ret = arr.list[index.v_Int];
+				if( arr.var_ptr != nullptr )
+				{
+					ret.var_ptr = & arr.var_ptr->list[index.v_Int];
+				}
+
+				return ret;
 			}
 
 			case Node::Type::Not:
