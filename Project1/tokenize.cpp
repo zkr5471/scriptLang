@@ -11,6 +11,9 @@ namespace Xscript
 
 		char const *punctuators[] =
 		{
+			"&=",
+			"|=",
+			"^=",
 			"+=",
 			"-=",
 			"*=",
@@ -24,6 +27,9 @@ namespace Xscript
 			"&&",
 			"||",
 			"!",
+			"~",
+			"&",
+			"|",
 			">",
 			"<",
 			"=",

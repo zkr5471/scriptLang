@@ -360,6 +360,12 @@ namespace Xscript
 				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::Mul, x, assign()), csm_tok);
 			else if( consume("/=") )
 				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::Div, x, assign()), csm_tok);
+			else if( consume("&=") )
+				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::BitAND, x, assign()), csm_tok);
+			else if( consume("^=") )
+				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::BitXOR, x, assign()), csm_tok);
+			else if( consume("|=") )
+				x = NewNode(Node::Type::Assign, x, NewNode(Node::Type::BitOR, x, assign()), csm_tok);
 
 			return x;
 		}
