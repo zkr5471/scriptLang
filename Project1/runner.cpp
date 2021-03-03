@@ -59,6 +59,21 @@ namespace Xscript
 				break;
 			}
 
+			case Node::Type::For:
+			{
+				run_expr(node->list[0]);
+				while( 1 )
+				{
+					if( node->list[1] && run_expr(node->list[1]).eval() == false )
+						break;
+
+					run_stmt(node->lhs);
+					run_expr(node->list[2]);
+				}
+
+				break;
+			}
+
 			default:
 				return run_expr(node);
 		}
@@ -81,6 +96,11 @@ namespace Xscript
 				Value var = variables[node->varIndex];
 				var.var_ptr = &variables[node->varIndex];
 				return var;
+			}
+
+			case Node::Type::Callfunc:
+			{
+
 			}
 
 			case Node::Type::Array:
@@ -300,13 +320,13 @@ namespace Xscript
 						switch( lhs.type )
 						{
 							case Value::Type::Int:
-								lhs.v_Int = lhs.v_Int > rhs.v_Int;
+								lhs.v_Int = lhs.v_Int < rhs.v_Int;
 								break;
 							case Value::Type::Char:
-								lhs.v_Int = lhs.v_Char > rhs.v_Char;
+								lhs.v_Int = lhs.v_Char < rhs.v_Char;
 								break;
 							case Value::Type::Float:
-								lhs.v_Int = lhs.v_Float > rhs.v_Float;
+								lhs.v_Int = lhs.v_Float < rhs.v_Float;
 								break;
 						}
 
@@ -322,13 +342,13 @@ namespace Xscript
 						switch( lhs.type )
 						{
 							case Value::Type::Int:
-								lhs.v_Int = lhs.v_Int >= rhs.v_Int;
+								lhs.v_Int = lhs.v_Int <= rhs.v_Int;
 								break;
 							case Value::Type::Char:
-								lhs.v_Int = lhs.v_Char >= rhs.v_Char;
+								lhs.v_Int = lhs.v_Char <= rhs.v_Char;
 								break;
 							case Value::Type::Float:
-								lhs.v_Int = lhs.v_Float >= rhs.v_Float;
+								lhs.v_Int = lhs.v_Float <= rhs.v_Float;
 								break;
 						}
 

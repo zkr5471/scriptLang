@@ -92,7 +92,7 @@ namespace Xscript
 			Block,
 			If,
 			For,
-			Foreach,
+//			Foreach,
 			While,
 
 

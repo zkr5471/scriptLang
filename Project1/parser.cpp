@@ -405,6 +405,30 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("for") )
+			{
+				expect("(");
+				Node *x = NewNode(Node::Type::For);
+
+				for( int i = 0; i < 2; i++ ) {
+					if( !consume(";") ) {
+						x->list.push_back(expr());
+						expect(";");
+					}
+					else
+						x->list.push_back(nullptr);
+				}
+
+				if( !consume(")") ) {
+					x->list.push_back(expr());
+					expect(")");
+				}
+				else
+					x->list.push_back(nullptr);
+
+				x->lhs = stmt();
+				return x;
+			}
 
 
 			Node *x = expr();
