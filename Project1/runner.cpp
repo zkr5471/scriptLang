@@ -34,6 +34,7 @@ namespace Xscript
 	Value run_stmt(Node *node)
 	{
 		static bool *LoopBreaked = nullptr;
+		static bool *LoopContinued = nullptr;
 
 		if( node == nullptr )
 			return { };
@@ -61,6 +62,16 @@ namespace Xscript
 				break;
 			}
 
+			case Node::Type::Continue:
+			{
+				if( LoopBreaked == nullptr )
+					Error(node->tok->pos, "cannot use 'continue' here");
+
+				*LoopBreaked = 1;
+				*LoopContinued = 1;
+				break;
+			}
+
 			case Node::Type::If:
 			{
 				Value cond = run_expr(node->lhs);
@@ -75,9 +86,11 @@ namespace Xscript
 
 			case Node::Type::For:
 			{
-				bool breaked = 0;
+				bool breaked = 0, continued = 0;;
 				bool *oldptr = LoopBreaked;
+				bool *oldptrc = LoopContinued;
 				LoopBreaked = &breaked;
+				LoopContinued = &continued;
 
 				run_expr(node->list[0]);
 				while( 1 )
@@ -85,15 +98,17 @@ namespace Xscript
 					if( node->list[1] && run_expr(node->list[1]).eval() == false )
 						break;
 
+					continued = breaked = 0;
 					run_stmt(node->lhs);
 
-					if( breaked )
+					if( !continued && breaked )
 						break;
 
 					run_expr(node->list[2]);
 				}
 
 				LoopBreaked = oldptr;
+				LoopContinued = oldptrc;
 				break;
 			}
 

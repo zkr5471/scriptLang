@@ -442,6 +442,14 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("continue") )
+			{
+				expect(";");
+				Node *x = NewNode(Node::Type::Continue);
+				x->tok = csm_tok;
+				return x;
+			}
+
 
 			Node *x = expr();
 			expect(";");
