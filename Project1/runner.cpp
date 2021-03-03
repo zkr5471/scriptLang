@@ -124,6 +124,7 @@ namespace Xscript
 			case Node::Type::Callfunc:
 			{
 
+				break;
 			}
 
 			case Node::Type::Array:

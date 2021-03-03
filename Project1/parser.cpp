@@ -320,10 +320,12 @@ namespace Xscript
 			Node *x = BitOR();
 
 			while( check() )
+			{
 				if( consume("&&") )
-					x = NewNode(Node::Type::Not, x, BitOR(), csm_tok);
+					x = NewNode(Node::Type::And, x, BitOR(), csm_tok);
 				else
 					break;
+			}
 
 			return x;
 		}
@@ -333,10 +335,12 @@ namespace Xscript
 			Node *x = And();
 
 			while( check() )
+			{
 				if( consume("||") )
 					x = NewNode(Node::Type::Or, x, And(), csm_tok);
 				else
 					break;
+			}
 
 			return x;
 		}
