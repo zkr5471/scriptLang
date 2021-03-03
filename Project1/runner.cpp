@@ -47,6 +47,18 @@ namespace Xscript
 				break;
 			}
 
+			case Node::Type::If:
+			{
+				Value cond = run_expr(node->lhs);
+
+				if( cond.eval() )
+					run_stmt(node->rhs);
+				else if( node->list.size() )
+					run_stmt(node->list[0]);
+
+				break;
+			}
+
 			default:
 				return run_expr(node);
 		}

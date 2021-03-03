@@ -391,7 +391,18 @@ namespace Xscript
 
 			if( consume("if") )
 			{
+				expect("(");
+				Node *x = NewNode(Node::Type::If, expr(), nullptr, csm_tok);
+				
+				expect(")");
+				x->rhs = stmt();
 
+				if( consume("else") )
+				{
+					x->list.push_back(stmt());
+				}
+
+				return x;
 			}
 
 
