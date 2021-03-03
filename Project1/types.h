@@ -39,7 +39,7 @@ namespace Xscript
 		Value &operator = (Value const &value);
 
 		bool is_string() const;
-
+		bool eval() const;
 	};
 
 	struct Token
@@ -78,7 +78,7 @@ namespace Xscript
 			Bigger,
 			BiggerOrEqual,
 			Equal,
-			NotEqaul,
+			NotEqual,
 			BitAND,
 			BitNOT,
 			BitXOR,

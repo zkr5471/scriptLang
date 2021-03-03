@@ -69,6 +69,23 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("[") )
+			{
+				Node *x = NewNode(Node::Type::Array);
+				x->tok = csm_tok;
+
+				if( !consume("]") )
+				{
+					do {
+						x->list.push_back(expr());
+					} while( consume(",") );
+
+					expect("]");
+				}
+
+				return x;
+			}
+
 			switch( g_tok->type )
 			{
 				case Token::Type::Int:
@@ -138,7 +155,7 @@ namespace Xscript
 			{
 				if( consume("[") )
 				{
-					x = NewNode(Node::Type::IndexRef, x, expr());
+					x = NewNode(Node::Type::IndexRef, x, expr(), csm_tok);
 					expect("]");
 				}
 				else
@@ -245,7 +262,7 @@ namespace Xscript
 				if( consume("==") )
 					x = NewNode(Node::Type::Equal, x, compare(), csm_tok);
 				else if( consume("!=") )
-					x = NewNode(Node::Type::NotEqaul, x, compare(), csm_tok);
+					x = NewNode(Node::Type::NotEqual, x, compare(), csm_tok);
 				else
 					break;
 			}
@@ -371,6 +388,12 @@ namespace Xscript
 
 				return x;
 			}
+
+			if( consume("if") )
+			{
+
+			}
+
 
 
 			Node *x = expr();

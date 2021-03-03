@@ -14,6 +14,14 @@ namespace Xscript
 		return list.size() != 0;
 	}
 
+	bool Value::eval() const
+	{
+		if( type == Type::Array )
+			return list.size() != 0;
+
+		return v_Int || v_Char || v_Float;
+	}
+
 	Value &Value::operator= (Value const &val)
 	{
 		type = val.type;

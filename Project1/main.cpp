@@ -56,6 +56,8 @@ int main()
 
 		Node *nd = Parser::parse(tok);
 
+		Value val = run_stmt(nd);
+
 		for( auto &&i : variables )
 		{
 			std::cout << i.name << ": " << i << '\n';
