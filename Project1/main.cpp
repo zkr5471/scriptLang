@@ -48,10 +48,9 @@ namespace Xscript {
 
 int main()
 {
-	string src = std::move(openfile("C:/Users/mrzkr/Desktop/test.txt"));
-
 	try
 	{
+		string src = std::move(openfile("C:/Users/mrzkr/Desktop/test.txt"));
 		Token *tok = tokenize(std::move(src));
 
 		Node *nd = Parser::parse(tok);
