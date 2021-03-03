@@ -430,6 +430,14 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("break") )
+			{
+				expect(";");
+				Node *x = NewNode(Node::Type::Break);
+				x->tok = csm_tok;
+				return x;
+			}
+
 
 			Node *x = expr();
 			expect(";");

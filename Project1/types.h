@@ -94,7 +94,8 @@ namespace Xscript
 			For,
 //			Foreach,
 			While,
-
+			Break,
+			Continue,
 
 			Array,
 			Value,

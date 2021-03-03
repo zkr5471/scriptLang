@@ -19,7 +19,7 @@ namespace Xscript
 		if( type == Type::Array )
 			return list.size() != 0;
 
-		return v_Int || v_Char || v_Float;
+		return v_Int != 0 || v_Char != 0 || v_Float != 0;
 	}
 
 	Value &Value::operator= (Value const &val)

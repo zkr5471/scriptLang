@@ -33,6 +33,8 @@ namespace Xscript
 
 	Value run_stmt(Node *node)
 	{
+		static bool *LoopBreaked = nullptr;
+
 		if( node == nullptr )
 			return { };
 
@@ -43,7 +45,19 @@ namespace Xscript
 				for( auto &&i : node->list )
 				{
 					run_stmt(i);
+
+					if( LoopBreaked && *LoopBreaked )
+						break;
 				}
+				break;
+			}
+
+			case Node::Type::Break:
+			{
+				if( LoopBreaked == nullptr )
+					Error(node->tok->pos, "cannot use 'break' here");
+
+				*LoopBreaked = 1;
 				break;
 			}
 
@@ -61,6 +75,10 @@ namespace Xscript
 
 			case Node::Type::For:
 			{
+				bool breaked = 0;
+				bool *oldptr = LoopBreaked;
+				LoopBreaked = &breaked;
+
 				run_expr(node->list[0]);
 				while( 1 )
 				{
@@ -68,9 +86,14 @@ namespace Xscript
 						break;
 
 					run_stmt(node->lhs);
+
+					if( breaked )
+						break;
+
 					run_expr(node->list[2]);
 				}
 
+				LoopBreaked = oldptr;
 				break;
 			}
 
