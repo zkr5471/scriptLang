@@ -338,6 +338,7 @@ namespace Xscript
 							Error(node->tok->pos, "type mismatch");
 
 						lhs.v_Int <<= rhs.v_Int;
+						lhs.type = Value::Type::Int;
 						break;
 					}
 					
@@ -347,6 +348,7 @@ namespace Xscript
 							Error(node->tok->pos, "type mismatch");
 
 						lhs.v_Int >>= rhs.v_Int;
+						lhs.type = Value::Type::Int;
 						break;
 					}
 
