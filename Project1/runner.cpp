@@ -121,6 +121,9 @@ namespace Xscript
 				Value lhs = run_expr(node->lhs);
 				Value rhs = run_expr(node->rhs);
 
+				if( lhs.var_ptr == nullptr )
+					Error(node->tok->pos, "cannot assignment to rvalue");
+
 				*lhs.var_ptr = rhs;
 
 				return rhs;
