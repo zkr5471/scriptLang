@@ -130,9 +130,7 @@ namespace Xscript
 				if( lhs.var_ptr == nullptr )
 					Error(node->tok->pos, "cannot assignment to rvalue");
 
-				*lhs.var_ptr = rhs;
-
-				return rhs;
+				return *lhs.var_ptr = rhs;
 			}
 
 			default:
