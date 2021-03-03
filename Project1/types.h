@@ -51,7 +51,7 @@ namespace Xscript
 			Char,
 			String,
 			Ident,
-			Reserved,
+			Punctuator,
 			End
 		};
 

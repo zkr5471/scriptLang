@@ -196,7 +196,7 @@ namespace Xscript
 
 					if( pos + len <= source.length() && source.substr(pos, len) == tok )
 					{
-						cur = NewToken(Token::Type::Reserved, cur, pos);
+						cur = NewToken(Token::Type::Punctuator, cur, pos);
 						cur->str = tok;
 
 						find = true;
