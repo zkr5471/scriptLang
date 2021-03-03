@@ -19,6 +19,6 @@ namespace Xscript
 		for( size_t i = 1; i < count; i++ )
 			temp += vec;
 
-		return temp;
+		return vec = temp;
 	}
 }
