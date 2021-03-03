@@ -15,18 +15,17 @@ namespace Xscript
 		if( _L.type == Value::Type::Float || _R.type == Value::Type::Float )
 		{
 			for( auto &&i : { &_L,&_R } )
-			{
 				if( i->type == Value::Type::Int ) i->v_Float = i->v_Int;
 				else if( i->type == Value::Type::Char ) i->v_Float = i->v_Char;
-			}
+			
 			_L.type = _R.type = Value::Type::Float;
 			return;
 		}
 
 		if( _L.type != _R.type ) {
-			for( auto &&i : { &_L,&_R } ) {
+			for( auto &&i : { &_L,&_R } )
 				if( i->type == Value::Type::Char ) i->v_Int = i->v_Char;
-			}
+			
 			_L.type = _R.type = Value::Type::Int;
 		}
 	}
