@@ -442,8 +442,6 @@ namespace Xscript
 
 					case Node::Type::BitAND:
 					{
-						ALART;
-
 						if( lhs.type != Value::Type::Int || rhs.type != Value::Type::Int )
 							Error(node->tok->pos, "type mismatch");
 
