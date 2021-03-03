@@ -43,11 +43,26 @@ namespace Xscript
 		};
 	}
 
+	string pos_to_line(size_t pos)
+	{
+		size_t ret = 0;
+
+		for( size_t i = 0; i < pos; i++ )
+			if( source[i] == '\n' ) ret++;
+
+		return string("Line ") + std::to_string(ret + 1);
+	}
+
 	[[noreturn]]
 	void Error(size_t errpos, string msg)
 	{
-		std::cout << std::to_string(errpos) << ": " << msg;
+		std::cout << pos_to_line(errpos) << ": " << msg << '\n';
 		throw 0;
+	}
+
+	void Warning(size_t pos, string msg)
+	{
+		std::cout << pos_to_line(pos) << ": warning: " << msg << '\n';
 	}
 
 	Token *tokenize(string &&src)

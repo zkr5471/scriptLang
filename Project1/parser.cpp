@@ -1,3 +1,4 @@
+#include <iostream>
 #include "types.h"
 #include "tokenize.h"
 #include "allocator.h"
@@ -450,8 +451,14 @@ namespace Xscript
 				return x;
 			}
 
-
+			size_t pos = g_tok->pos;
 			Node *x = expr();
+
+			if( x->type != Node::Type::Assign )
+			{
+				Warning(pos, "This expression is not meaning");
+			}
+
 			expect(";");
 			return x;
 		}
