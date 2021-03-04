@@ -82,10 +82,23 @@ namespace Xscript
 
 			case Node::Type::While:
 			{
+				bool breaked = 0, continued = 0;;
+				bool *oldptr = LoopBreaked;
+				bool *oldptrc = LoopContinued;
+				LoopBreaked = &breaked;
+				LoopContinued = &continued;
+
 				while( run_expr(node->lhs).eval() )
 				{
+					continued = breaked = 0;
 					run_stmt(node->rhs);
+
+					if( !continued && breaked )
+						break;
 				}
+
+				LoopBreaked = oldptr;
+				LoopContinued = oldptrc;
 				break;
 			}
 

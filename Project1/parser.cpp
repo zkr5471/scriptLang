@@ -429,6 +429,25 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("do") )
+			{
+				Node *nd = NewNode(Node::Type::While);
+				
+				Node *s = NewNode(Node::Type::Block);
+				s->list.push_back(stmt());
+				
+				expect("while");
+				expect("(");
+				s->list.push_back(NewNode(Node::Type::If, NewNode(Node::Type::Equal, expr(), NewNode_Int(0)), NewNode(Node::Type::Break)));
+				expect(")");
+				expect(";");
+
+				nd->lhs = NewNode_Int(1);
+				nd->rhs = s;
+
+				return nd;
+			}
+
 			if( consume("for") )
 			{
 				expect("(");
