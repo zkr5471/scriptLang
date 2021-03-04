@@ -63,7 +63,7 @@ namespace Xscript
 
 			case Node::Type::Continue:
 			{
-				if( LoopBreaked == nullptr )
+				if( LoopContinued == nullptr )
 					Error(node->tok->pos, "cannot use 'continue' here");
 
 				*LoopBreaked = 1;
