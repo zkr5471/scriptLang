@@ -45,7 +45,7 @@ namespace Xscript
 				for( auto &&i : node->list )
 				{
 					run_stmt(i);
-
+					
 					if( LoopBreaked && *LoopBreaked )
 						break;
 				}
@@ -79,6 +79,15 @@ namespace Xscript
 				else if( node->list.size() )
 					run_stmt(node->list[0]);
 
+				break;
+			}
+
+			case Node::Type::While:
+			{
+				while( run_expr(node->lhs).eval() )
+				{
+					run_stmt(node->rhs);
+				}
 				break;
 			}
 

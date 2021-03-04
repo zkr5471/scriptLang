@@ -416,10 +416,24 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("while") )
+			{
+				expect("(");
+				Node *x = NewNode(Node::Type::While);
+				x->tok = csm_tok;
+				x->lhs = expr();
+
+				expect(")");
+				x->rhs = stmt();
+
+				return x;
+			}
+
 			if( consume("for") )
 			{
 				expect("(");
 				Node *x = NewNode(Node::Type::For);
+				x->tok = csm_tok;
 
 				for( int i = 0; i < 2; i++ ) {
 					if( !consume(";") ) {
