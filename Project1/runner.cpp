@@ -66,8 +66,7 @@ namespace Xscript
 				if( LoopContinued == nullptr )
 					Error(node->tok->pos, "cannot use 'continue' here");
 
-				*LoopBreaked = 1;
-				*LoopContinued = 1;
+				*LoopBreaked = *LoopContinued = 1;
 				break;
 			}
 
