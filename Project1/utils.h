@@ -12,7 +12,7 @@ namespace Xscript
 	}
 
 	template <typename T>
-	std::vector<T> operator *= (std::vector<T> &vec, size_t count)
+	std::vector<T> &operator *= (std::vector<T> &vec, size_t count)
 	{
 		auto temp = vec;
 
