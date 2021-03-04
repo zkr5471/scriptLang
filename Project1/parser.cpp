@@ -456,7 +456,6 @@ namespace Xscript
 					Error(pos, "This switch statement is empty");
 				}
 
-			//	Node *cases = NewNode(Node::Type::Block);
 				std::vector<Node *> cases;
 
 				do
