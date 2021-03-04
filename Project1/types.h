@@ -109,7 +109,7 @@ namespace Xscript
 			MemberAccess
 		};
 
-		Type type;
+		Type type = Node::Type::Value;
 		Node *lhs = nullptr;
 		Node *rhs = nullptr;
 		Token *tok = nullptr;
