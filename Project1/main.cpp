@@ -42,9 +42,9 @@ string openfile(const char *path)
 	return std::move(ret);
 }
 
-namespace Xscript {
-	extern std::vector<Value> variables;
-}
+//namespace Xscript {
+//	extern std::vector<Value> variables;
+//}
 
 int main()
 {
@@ -57,8 +57,8 @@ int main()
 
 		Value val = run_stmt(nd);
 
-		for( auto &&i : variables )
-			std::cout << i.name << ": " << i << '\n';
+	//	for( auto &&i : variables )
+	//		std::cout << i.name << ": " << i << '\n';
 	}
 	catch( ... )
 	{

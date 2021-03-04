@@ -47,6 +47,7 @@ namespace Xscript
 		return nd;
 	}
 
+	extern std::vector<Value> variables;
 	void FreeMemory()
 	{
 		for( auto &&ptr : tokens )
@@ -61,6 +62,7 @@ namespace Xscript
 
 		tokens.clear();
 		nodes.clear();
+		variables.clear();
 	}
 
 }

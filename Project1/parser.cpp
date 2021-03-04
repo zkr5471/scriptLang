@@ -165,19 +165,34 @@ namespace Xscript
 
 			return x;
 		}
+		
+		Node *member_access()
+		{
+			Node *x = indexRef();
+
+			while( check() )
+			{
+				if( consume(".") )
+					x = NewNode(Node::Type::MemberAccess, x, indexRef(), csm_tok);
+				else
+					break;
+			}
+
+			return x;
+		}
 
 		Node *unary()
 		{
 			if( consume("-") )
-				return NewNode(Node::Type::Sub, NewNode_Int(0), indexRef());
+				return NewNode(Node::Type::Sub, NewNode_Int(0), member_access(), csm_tok);
 			
 			if( consume("!") )
-				return NewNode(Node::Type::Not, indexRef(), nullptr);
+				return NewNode(Node::Type::Not, member_access(), nullptr, csm_tok);
 
 			if( consume("~") )
-				return NewNode(Node::Type::BitNOT, indexRef(), nullptr);
+				return NewNode(Node::Type::BitNOT, member_access(), nullptr, csm_tok);
 
-			return indexRef();
+			return member_access();
 		}
 
 		Node *mul()

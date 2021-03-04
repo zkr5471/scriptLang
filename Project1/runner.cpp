@@ -191,8 +191,42 @@ namespace Xscript
 
 			case Node::Type::Callfunc:
 			{
+				string name = node->tok->str;
 
-				break;
+				if( name == "print" )
+				{
+					for( auto &&i : node->list )
+						std::cout << run_expr(i);
+
+					std::cout << '\n';
+					break;
+				}
+
+				Error(node->tok->pos, "unknown function '" + name + "'");
+			}
+
+			case Node::Type::MemberAccess:
+			{
+				Value obj = run_expr(node->lhs);
+
+				if( node->rhs->type != Node::Type::Callfunc && node->rhs->type != Node::Type::Variable )
+					Error(node->tok->pos, "syntax error");
+
+				string name = node->rhs->tok->str;
+				bool is_func = node->rhs->type == Node::Type::Callfunc;
+
+				if( name == "length" && !is_func )
+				{
+					if( obj.type != Value::Type::Array )
+						Error(node->tok->pos, "not have the 'length' property");
+
+					Value ret;
+					ret.v_Int = obj.list.size();
+
+					return ret;
+				}
+
+				Error(node->tok->pos, "invalid member access");
 			}
 
 			case Node::Type::Array:
