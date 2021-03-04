@@ -441,6 +441,54 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("switch") )
+			{
+				size_t pos = csm_tok->pos;
+
+				expect("(");
+				Node *cond = expr();
+				expect(")");
+
+				expect("{");
+
+				if( consume("}") )
+				{
+					Error(pos, "This switch statement is empty");
+				}
+
+			//	Node *cases = NewNode(Node::Type::Block);
+				std::vector<Node *> cases;
+
+				do
+				{
+					Node *case_expr = nullptr;
+					Node *case_block = NewNode(Node::Type::Block);
+
+					if( !consume("default") )
+					{
+						expect("case");
+						case_expr = NewNode(Node::Type::Equal, cond, expr());
+					}
+					else
+					{
+						case_expr = NewNode_Int(1);
+					}
+
+					expect(":");
+
+					while( g_tok->str != "case" && g_tok->str != "default" && g_tok->str != "}" )
+					{
+						case_block->list.push_back(stmt());
+					}
+
+					cases.push_back(NewNode(Node::Type::Case, case_expr, case_block));
+				} while( !consume("}") );
+
+				Node *nd = NewNode(Node::Type::Switch, cond, nullptr);
+				nd->list = std::move(cases);
+				return nd;
+			}
+
 			if( consume("break") )
 			{
 				expect(";");

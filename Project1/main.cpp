@@ -42,6 +42,10 @@ string openfile(const char *path)
 	return std::move(ret);
 }
 
+namespace Xscript {
+	extern std::vector<Value> variables;
+}
+
 int main()
 {
 	try
@@ -52,6 +56,9 @@ int main()
 		Node *nd = Parser::parse(tok);
 
 		Value val = run_stmt(nd);
+
+		for( auto &&i : variables )
+			std::cout << i.name << ": " << i << '\n';
 	}
 	catch( ... )
 	{

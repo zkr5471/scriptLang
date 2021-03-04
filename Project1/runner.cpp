@@ -111,6 +111,41 @@ namespace Xscript
 				break;
 			}
 
+			case Node::Type::Switch:
+			{
+				bool breaked = 0;
+				bool *oldptr = LoopBreaked;
+				LoopBreaked = &breaked;
+
+				Value cond = run_expr(node->lhs);
+
+				size_t index = 0;
+
+				for( index = 0; index < node->list.size(); index++ )
+				{
+					if( run_expr(node->list[index]->lhs).eval() )
+						break;
+				}
+				
+				for( ; index < node->list.size(); index++ )
+				{
+					run_stmt(node->list[index]);
+
+					if( breaked )
+						break;
+				}
+
+				LoopBreaked = oldptr;
+				break;
+			}
+
+			case Node::Type::Case:
+			{
+				run_stmt(node->rhs);
+
+				break;
+			}
+
 			default:
 				return run_expr(node);
 		}

@@ -97,6 +97,9 @@ namespace Xscript
 			Break,
 			Continue,
 
+			Switch,
+			Case,
+
 			Array,
 			Value,
 			Variable,
