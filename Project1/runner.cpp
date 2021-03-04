@@ -191,18 +191,7 @@ namespace Xscript
 
 			case Node::Type::Callfunc:
 			{
-				string name = node->tok->str;
-
-				if( name == "print" )
-				{
-					for( auto &&i : node->list )
-						std::cout << run_expr(i);
-
-					std::cout << '\n';
-					break;
-				}
-
-				Error(node->tok->pos, "unknown function '" + name + "'");
+				return run_builtin_func(node);
 			}
 
 			case Node::Type::MemberAccess:
