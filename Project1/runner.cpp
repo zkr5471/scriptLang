@@ -72,9 +72,7 @@ namespace Xscript
 
 			case Node::Type::If:
 			{
-				Value cond = run_expr(node->lhs);
-
-				if( cond.eval() )
+				if( run_expr(node->lhs).eval() )
 					run_stmt(node->rhs);
 				else if( node->list.size() )
 					run_stmt(node->list[0]);
