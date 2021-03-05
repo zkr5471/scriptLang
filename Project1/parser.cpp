@@ -584,12 +584,13 @@ namespace Xscript
 
 			if( consume("switch") )
 			{
-				size_t pos = csm_tok->pos;
+				Node *nd = NewNode(Node::Type::Switch);
+				nd->tok = csm_tok;
 
 				expect("(");
 
 				Node *var = MakeUniqueVariable();
-				Node *cond = NewNode(Node::Type::Assign, var, expr());
+				nd->lhs = NewNode(Node::Type::Assign, var, expr());
 
 				expect(")");
 
@@ -597,10 +598,8 @@ namespace Xscript
 
 				if( consume("}") )
 				{
-					Error(pos, "This switch statement is empty");
+					Error(nd->tok->pos, "This switch statement is empty");
 				}
-
-				std::vector<Node *> cases;
 
 				do
 				{
@@ -624,11 +623,9 @@ namespace Xscript
 						case_block->list.push_back(stmt());
 					}
 
-					cases.push_back(NewNode(Node::Type::Case, case_expr, case_block));
+					nd->list.push_back(NewNode(Node::Type::Case, case_expr, case_block));
 				} while( !consume("}") );
 
-				Node *nd = NewNode(Node::Type::Switch, cond, nullptr);
-				nd->list = std::move(cases);
 				return nd;
 			}
 
@@ -658,9 +655,9 @@ namespace Xscript
 				if( g_tok->type != Token::Type::Ident )
 					Error(g_tok->pos, "syntax error");
 
-				Token *func_tok = g_tok;
-				std::vector<Node*> params;
-				
+				Node *func_nd = NewNode(Node::Type::Function);
+				func_nd->tok = g_tok;
+
 				next();
 				expect("(");
 
@@ -673,12 +670,11 @@ namespace Xscript
 						if( g_tok->type != Token::Type::Ident )
 							Error(g_tok->pos, "syntax error");
 
-						Token *tok = NewToken();
-						tok->value.name = g_tok->str;
 						Node *nd = NewNode(Node::Type::Param);
-						nd->tok = tok;
+						nd->tok = NewToken();
+						nd->tok->value.name = g_tok->str;
 						nd->varIndex = p_index;
-						params.push_back(nd);
+						func_nd->list.push_back(nd);
 
 						next();
 						p_index++;
@@ -686,13 +682,8 @@ namespace Xscript
 					expect(")");
 				}
 
-				Node *func_nd = NewNode(Node::Type::Function);
-				
-				func_nd->list = std::move(params);
 				cur_func_args = & func_nd->list;
-
 				func_nd->lhs = stmt();
-				func_nd->tok = func_tok;
 
 				functions.push_back(func_nd);
 				prs_func = 0;

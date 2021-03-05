@@ -28,7 +28,12 @@ namespace Xscript
 
 		string GetRandomStr()
 		{
-			int len = Random(10, 20);
+			return GetRandomStr(15, 30);
+		}
+
+		string GetRandomStr(size_t min, size_t max)
+		{
+			int len = Random(min, max);
 			string ret;
 
 			for( int i = 0; i < len; i++ )

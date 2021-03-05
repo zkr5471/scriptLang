@@ -42,9 +42,9 @@ string openfile(const char *path)
 	return std::move(ret);
 }
 
-//namespace Xscript {
-//	extern std::vector<Value> variables;
-//}
+namespace Xscript {
+	extern std::vector<Value> variables;
+}
 
 int main()
 {

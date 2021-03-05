@@ -247,15 +247,19 @@ namespace Xscript
 
 			case Node::Type::Callfunc:
 			{
+				// find user-defined function
 				auto find = find_func(node->tok->str);
 
+				// if found
 				if( find != -1 )
 				{
 					Node *func_nd = functions[find];
 
+					// no match paramater count
 					if( func_nd->list.size() != node->list.size() )
 						Error(node->tok->pos, "illegal call function '" + node->tok->str + "'");
 
+					// save params, and calc param to copy to list
 					std::vector<Value> bak;
 					for( size_t i = 0; i < func_nd->list.size(); i++ )
 					{
@@ -263,17 +267,21 @@ namespace Xscript
 						func_nd->list[i]->tok->value = run_expr(node->list[i]);
 					}
 
+					// change type for running node
 					func_nd->type = Node::Type::CallUserFunction;
+
 					auto ret = run_stmt(functions[find]);
 
-					func_nd->type = Node::Type::Function;
+					func_nd->type = Node::Type::Function; // restore type
 
+					// restore params
 					for( size_t i = 0; i < func_nd->list.size(); i++ )
 						func_nd->list[i]->tok->value = bak[i];
 
 					return ret;
 				}
 
+				// not found the user-defined function, try to execute built-in function
 				return run_builtin_func(node);
 			}
 

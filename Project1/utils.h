@@ -30,5 +30,6 @@ namespace Xscript
 		int Random(int begin, int end);
 
 		string GetRandomStr();
+		string GetRandomStr(size_t min, size_t max);
 	}
 }
