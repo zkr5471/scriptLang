@@ -251,18 +251,26 @@ namespace Xscript
 
 				if( find != -1 )
 				{
-					if( functions[find]->list.size() != node->list.size() )
+					Node *func_nd = functions[find];
+
+					if( func_nd->list.size() != node->list.size() )
 						Error(node->tok->pos, "illegal call function '" + node->tok->str + "'");
 
-					for( size_t i = 0; i < functions[find]->list.size(); i++ )
+					std::vector<Value> bak;
+					for( size_t i = 0; i < func_nd->list.size(); i++ )
 					{
-						functions[find]->list[i]->tok->value = run_expr(node->list[i]);
+						bak.push_back(func_nd->list[i]->tok->value);
+						func_nd->list[i]->tok->value = run_expr(node->list[i]);
 					}
 
-					functions[find]->type = Node::Type::CallUserFunction;
+					func_nd->type = Node::Type::CallUserFunction;
 					auto ret = run_stmt(functions[find]);
 
-					functions[find]->type = Node::Type::Function;
+					func_nd->type = Node::Type::Function;
+
+					for( size_t i = 0; i < func_nd->list.size(); i++ )
+						func_nd->list[i]->tok->value = bak[i];
+
 					return ret;
 				}
 
