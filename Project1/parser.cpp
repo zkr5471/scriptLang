@@ -689,10 +689,9 @@ namespace Xscript
 				}
 
 				Node *func_nd = NewNode(Node::Type::Function);
+				func_nd->list = std::move(params);
 				func_nd->lhs = stmt();
 				func_nd->tok = func_tok;
-
-				func_nd->list = std::move(params);
 
 				functions.push_back(func_nd);
 				prs_func = 0;
