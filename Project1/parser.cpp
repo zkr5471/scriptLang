@@ -7,6 +7,10 @@
 namespace Xscript
 {
 	std::vector<Value> variables;
+	std::vector<Node *> functions;
+
+	bool prs_func;
+	std::vector<Node *> *cur_func_args;
 
 	namespace Parser
 	{
@@ -146,6 +150,23 @@ namespace Xscript
 						}
 
 						return nd;
+					}
+
+					if( prs_func )
+					{
+						int index = 0;
+
+						for( auto &&i : *cur_func_args )
+						{
+							if( i->tok->value.name == nd->tok->str )
+							{
+								nd->type = Node::Type::Param;
+								nd->varIndex = index;
+
+								return nd;
+							}
+							index++;
+						}
 					}
 
 					int64_t find = find_variable(nd->tok->str);
@@ -625,6 +646,67 @@ namespace Xscript
 				Node *x = NewNode(Node::Type::Continue);
 				x->tok = csm_tok;
 				return x;
+			}
+
+			if( consume("def") )
+			{
+				prs_func = 1;
+
+				if( g_tok->type != Token::Type::Ident )
+					Error(g_tok->pos, "syntax error");
+
+		//		string func_name = g_tok->str;
+				Token *func_tok = g_tok;
+				std::vector<Node*> params;
+				cur_func_args = &params;
+
+				next();
+				expect("(");
+
+				if( !consume(")") )
+				{
+					size_t p_index = 0;
+
+					do
+					{
+						if( g_tok->type != Token::Type::Ident )
+							Error(g_tok->pos, "syntax error");
+
+						Token *tok = NewToken();
+						tok->value.name = g_tok->str;
+						Node *nd = NewNode(Node::Type::Param);
+						nd->tok = tok;
+						nd->varIndex = p_index;
+						params.push_back(nd);
+
+						next();
+						p_index++;
+					} while( consume(",") );
+					expect(")");
+				}
+
+				Node *func_nd = NewNode(Node::Type::Function);
+				func_nd->lhs = stmt();
+				func_nd->tok = func_tok;
+
+				func_nd->list = std::move(params);
+
+				functions.push_back(func_nd);
+				prs_func = 0;
+
+				return func_nd;
+			}
+
+			if( consume("return") )
+			{
+				if( !consume(";") )
+				{
+					Node *e = expr();
+					expect(";");
+					return NewNode(Node::Type::Return, e, nullptr);
+				}
+
+				return NewNode(Node::Type::Return);
 			}
 
 			Node *x = expr();

@@ -6,6 +6,22 @@
 namespace Xscript
 {
 	extern std::vector<Value> variables;
+	extern std::vector<Node *> functions;
+
+	static Node *cur_func_node;
+	static Value *func_ret_val;
+
+	int64_t find_func(string name)
+	{
+		int64_t index = 0;
+
+		for( auto &&i : functions ) {
+			if( i->tok->str == name ) return index;
+			index++;
+		}
+
+		return -1;
+	}
 
 	void _adjust_ValueType(Value &_L, Value &_R)
 	{
@@ -165,6 +181,39 @@ namespace Xscript
 				break;
 			}
 
+			case Node::Type::CallUserFunction:
+			{
+				auto ptr = cur_func_node;
+				cur_func_node = node;
+
+				auto oldptr = LoopBreaked;
+				auto ret_ptr = func_ret_val;
+				
+				bool returned = 0;
+				LoopBreaked = &returned;
+				
+				Value ret;
+				func_ret_val = &ret;
+
+				run_stmt(node->lhs);
+
+				cur_func_node = ptr;
+				LoopBreaked = oldptr;
+				func_ret_val = ret_ptr;
+				
+				return ret;
+			}
+
+			case Node::Type::Return:
+			{
+				if( func_ret_val == nullptr )
+					Error(node->tok->pos, "cannot use 'return' here");
+
+				*func_ret_val = run_expr(node->lhs);
+				*LoopBreaked = true;
+				break;
+			}
+
 			default:
 				return run_expr(node);
 		}
@@ -189,8 +238,34 @@ namespace Xscript
 				return var;
 			}
 
+			case Node::Type::Param:
+			{
+				auto& x = cur_func_node->list[node->varIndex]->tok->value;
+				x.var_ptr = &x;
+				return x;
+			}
+
 			case Node::Type::Callfunc:
 			{
+				auto find = find_func(node->tok->str);
+
+				if( find != -1 )
+				{
+					if( functions[find]->list.size() != node->list.size() )
+						Error(node->tok->pos, "illegal call function '" + node->tok->str + "'");
+
+					for( size_t i = 0; i < functions[find]->list.size(); i++ )
+					{
+						functions[find]->list[i]->tok->value = run_expr(node->list[i]);
+					}
+
+					functions[find]->type = Node::Type::CallUserFunction;
+					auto ret = run_stmt(functions[find]);
+
+					functions[find]->type = Node::Type::Function;
+					return ret;
+				}
+
 				return run_builtin_func(node);
 			}
 

@@ -100,6 +100,11 @@ namespace Xscript
 			Switch,
 			Case,
 
+			CallUserFunction,
+			Function,
+			Param,
+			Return,
+
 			Array,
 			Value,
 			Variable,
@@ -117,6 +122,7 @@ namespace Xscript
 		size_t varIndex = 0;
 
 		std::vector<Node *> list;
+	//	std::vector<Value> params; // function
 	};
 
 	std::ostream &operator << (std::ostream &ost, Value const &val);
