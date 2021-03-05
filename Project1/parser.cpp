@@ -658,11 +658,9 @@ namespace Xscript
 				if( g_tok->type != Token::Type::Ident )
 					Error(g_tok->pos, "syntax error");
 
-		//		string func_name = g_tok->str;
 				Token *func_tok = g_tok;
 				std::vector<Node*> params;
-				cur_func_args = &params;
-
+				
 				next();
 				expect("(");
 
@@ -689,7 +687,10 @@ namespace Xscript
 				}
 
 				Node *func_nd = NewNode(Node::Type::Function);
+				
 				func_nd->list = std::move(params);
+				cur_func_args = & func_nd->list;
+
 				func_nd->lhs = stmt();
 				func_nd->tok = func_tok;
 
