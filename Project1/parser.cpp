@@ -650,6 +650,9 @@ namespace Xscript
 
 			if( consume("def") )
 			{
+				if( prs_func )
+					Error(csm_tok->pos, "nested def");
+
 				prs_func = 1;
 
 				if( g_tok->type != Token::Type::Ident )
