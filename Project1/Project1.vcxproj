@@ -146,6 +146,7 @@
     <ClCompile Include="runner.cpp" />
     <ClCompile Include="tokenize.cpp" />
     <ClCompile Include="types.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="allocator.h" />

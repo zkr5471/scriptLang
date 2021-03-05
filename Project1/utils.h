@@ -21,4 +21,14 @@ namespace Xscript
 
 		return vec = temp;
 	}
+
+	namespace Utils
+	{
+		void RandomInit();
+
+		int Random(int range);
+		int Random(int begin, int end);
+
+		string GetRandomStr();
+	}
 }

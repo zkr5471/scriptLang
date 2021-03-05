@@ -2,6 +2,8 @@
 
 #include <string>
 #include <vector>
+
+using std::string;
 #include "utils.h"
 
 #define  ALART  { size_t L=__LINE__; \
@@ -14,8 +16,6 @@
 
 namespace Xscript
 {
-	using std::string;
-
 	struct Value
 	{
 		enum class Type

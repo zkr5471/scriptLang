@@ -61,6 +61,25 @@ namespace Xscript
 			return nd;
 		}
 
+		Node *MakeUniqueVariable()
+		{
+			string name;
+
+			do {
+				name = Utils::GetRandomStr();
+			} while( find_variable(name) != -1 );
+
+			Value var;
+			var.name = name;
+			
+			Node *nd = NewNode(Node::Type::Variable);
+			nd->varIndex = variables.size();
+
+			variables.push_back(var);
+
+			return nd;
+		}
+
 		Node *primary()
 		{
 			if( consume("(") )
@@ -496,7 +515,10 @@ namespace Xscript
 				size_t pos = csm_tok->pos;
 
 				expect("(");
-				Node *cond = expr();
+
+				Node *var = MakeUniqueVariable();
+				Node *cond = NewNode(Node::Type::Assign, var, expr());
+
 				expect(")");
 
 				expect("{");
@@ -516,7 +538,7 @@ namespace Xscript
 					if( !consume("default") )
 					{
 						expect("case");
-						case_expr = NewNode(Node::Type::Equal, cond, expr());
+						case_expr = NewNode(Node::Type::Equal, var, expr());
 					}
 					else
 					{
