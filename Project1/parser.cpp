@@ -510,6 +510,57 @@ namespace Xscript
 				return x;
 			}
 
+			if( consume("foreach") )
+			{
+				Token *tok = csm_tok;
+
+				expect("(");
+				
+				Node *iterator = primary();
+				if( iterator->type != Node::Type::Variable)
+					Error(tok->pos, "iterator is must be a variable");
+
+				expect("in");
+				Node *arr = expr();
+
+				expect(")");
+
+				Node *counter = MakeUniqueVariable();
+
+				std::vector<Node *> for_nodes;
+
+				// making for-loop nodes
+				{
+					// first, set zero to counter
+					for_nodes.push_back(NewNode(Node::Type::Assign, counter, NewNode_Int(0)));
+
+					// second, smaller than length of array
+					Node *Length_nd = NewNode(Node::Type::Variable);
+					Length_nd->tok = NewToken(Token::Type::Ident);
+					Length_nd->tok->str = "length";
+						// copy token pointer for "not have length" error
+						Length_nd = NewNode(Node::Type::MemberAccess, arr, Length_nd);
+						Length_nd->tok = tok; // getting "node->tok->pos" when say error in member access with "length"
+					for_nodes.push_back(NewNode(Node::Type::Bigger, counter, Length_nd));
+
+					// last, inclement counter
+					for_nodes.push_back(NewNode(Node::Type::Assign, counter, NewNode(Node::Type::Add, counter, NewNode_Int(1))));
+				}
+
+				Node *for_nd = NewNode(Node::Type::For);
+				for_nd->list = std::move(for_nodes);
+
+				// making statement
+				Node *st = NewNode(Node::Type::Block);
+				
+				st->list.push_back(NewNode(Node::Type::Assign, iterator, NewNode(Node::Type::IndexRef, arr, counter)));
+				st->list.push_back(stmt());
+
+				for_nd->lhs = st;
+
+				return for_nd;
+			}
+
 			if( consume("switch") )
 			{
 				size_t pos = csm_tok->pos;
