@@ -105,31 +105,6 @@ namespace Xscript
 				break;
 			}
 
-			//case Node::Type::While:
-			//{
-			//	bool breaked = 0, continued = 0;;
-			//	bool *oldptr = LoopBreaked;
-			//	bool *oldptrc = LoopContinued;
-			//	LoopBreaked = &breaked;
-			//	LoopContinued = &continued;
-
-			//	while( run_expr(node->lhs).eval() )
-			//	{
-			//		continued = breaked = 0;
-			//		run_stmt(node->rhs);
-
-			//		if( func_returned )
-			//			break;
-
-			//		if( !continued && breaked )
-			//			break;
-			//	}
-
-			//	LoopBreaked = oldptr;
-			//	LoopContinued = oldptrc;
-			//	break;
-			//}
-
 			case Node::Type::While:
 				break;
 
@@ -202,29 +177,6 @@ namespace Xscript
 				break;
 			}
 
-			//case Node::Type::RunUserFunction:
-			//{
-			//	auto ptr = cur_func_node;
-			//	cur_func_node = node;
-
-			//	auto oldptr = LoopBreaked;
-			//	auto ret_ptr = func_ret_val;
-			//	
-			//	bool returned = 0;
-			//	LoopBreaked = &returned;
-			//	
-			//	Value ret;
-			//	func_ret_val = &ret;
-
-			//	run_stmt(node->lhs);
-
-			//	cur_func_node = ptr;
-			//	LoopBreaked = oldptr;
-			//	func_ret_val = ret_ptr;
-			//	
-			//	return ret;
-			//}
-
 			case Node::Type::Return:
 			{
 				if( func_ret_val == nullptr )
@@ -291,9 +243,7 @@ namespace Xscript
 						func_nd->list[i]->tok->value = run_expr(node->list[i]);
 					}
 
-					// change type for running node
-				//	func_nd->type = Node::Type::CallUserFunction;
-
+					// save pointers
 					auto oldptr = cur_func_node;
 					auto old_retptr = func_ret_val;
 					auto old_ret_flag_ptr = func_returned;
@@ -306,11 +256,10 @@ namespace Xscript
 					func_ret_val = &func_ret;
 					run_stmt(func_nd->lhs);
 
+					// restore pointers
 					cur_func_node = oldptr;
 					func_ret_val = old_retptr;
 					func_returned = old_ret_flag_ptr;
-
-		//			func_nd->type = Node::Type::Function; // restore type
 
 					// restore params
 					for( size_t i = 0; i < func_nd->list.size(); i++ )
