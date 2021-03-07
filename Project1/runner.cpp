@@ -52,7 +52,6 @@ namespace Xscript
 
 	Value run_stmt(Node *node)
 	{
-		
 		if( node == nullptr )
 			return { };
 
@@ -152,10 +151,7 @@ namespace Xscript
 				{
 					run_stmt(node->list[index]->rhs);
 
-					if( func_returned )
-						break;
-
-					if( breaked )
+					if( func_returned || breaked )
 						break;
 				}
 
