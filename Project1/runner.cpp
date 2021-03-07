@@ -157,7 +157,7 @@ namespace Xscript
 				
 				for( ; index < node->list.size(); index++ )
 				{
-					run_stmt(node->list[index]);
+					run_stmt(node->list[index]->rhs);
 
 					if( func_returned )
 						break;
@@ -170,12 +170,12 @@ namespace Xscript
 				break;
 			}
 
-			case Node::Type::Case:
-			{
-				run_stmt(node->rhs);
+			//case Node::Type::Case:
+			//{
+			//	run_stmt(node->rhs);
 
-				break;
-			}
+			//	break;
+			//}
 
 			case Node::Type::Return:
 			{
