@@ -8,8 +8,15 @@ namespace Xscript
 	extern std::vector<Value> variables;
 	extern std::vector<Node *> functions;
 
-	static Node *cur_func_node;
-	static Value *func_ret_val;
+	namespace
+	{
+		bool *LoopBreaked = nullptr;
+		bool *LoopContinued = nullptr;
+		bool *func_returned = nullptr;
+
+		Node *cur_func_node;
+		Value *func_ret_val;
+	}
 
 	int64_t find_func(string name)
 	{
@@ -41,14 +48,6 @@ namespace Xscript
 			
 			_L.type = _R.type = Value::Type::Int;
 		}
-	}
-
-	namespace
-	{
-		bool *LoopBreaked = nullptr;
-		bool *LoopContinued = nullptr;
-		bool *func_returned = nullptr;
-
 	}
 
 	Value run_stmt(Node *node)
