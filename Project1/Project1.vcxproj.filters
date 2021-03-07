@@ -33,9 +33,6 @@
     <ClCompile Include="runner.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="builtin_funcs.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>

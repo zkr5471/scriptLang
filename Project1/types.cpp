@@ -5,6 +5,9 @@ namespace Xscript
 {
 	bool Value::is_string() const
 	{
+		if( type != Type::Array )
+			return 0;
+
 		for( auto &&i : list )
 		{
 			if( i.type != Type::Char )
@@ -20,6 +23,36 @@ namespace Xscript
 			return list.size() != 0;
 
 		return v_Int != 0 || v_Char != 0 || v_Float != 0;
+	}
+	
+	bool Value::equals(Value const &val) const
+	{
+		if( type != val.type )
+			return 0;
+
+		switch( type )
+		{
+			case Type::Int:
+				return v_Int == val.v_Int;
+
+			case Type::Float:
+				return v_Float == val.v_Float;
+
+			case Type::Char:
+				return v_Char == val.v_Char;
+
+			case Type::Array:
+				if( list.size() != val.list.size() )
+					return 0;
+
+				for( size_t i = 0; i < list.size(); i++ )
+					if( list[i].equals(val.list[i]) == 0 )
+						return 0;
+
+				return 1;
+		}
+
+		return 0;
 	}
 
 	Value &Value::operator= (Value const &val)

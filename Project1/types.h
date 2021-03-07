@@ -40,6 +40,7 @@ namespace Xscript
 
 		bool is_string() const;
 		bool eval() const;
+		bool equals(Value const &val) const;
 	};
 
 	struct Token
