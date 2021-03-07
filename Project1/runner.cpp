@@ -2,6 +2,7 @@
 #include "types.h"
 #include "tokenize.h"
 #include "runner.h"
+#include "error.h"
 
 namespace Xscript
 {
@@ -61,6 +62,39 @@ namespace Xscript
 				std::cout << run_expr(i);
 
 			std::cout << '\n';
+			return ret;
+		}
+
+		if( name == "to_int" )
+		{
+			if( node->list.size() != 1 )
+				Error(node->tok->pos, ERROR_ILLEGAL_PARAM);
+
+			auto &&v = run_expr(node->list[0]);
+
+			if( v.type == Value::Type::Char )
+			{
+				if( isdigit(v.v_Char) == 0 )
+					return ret;
+
+				ret.v_Int = v.v_Char - '0';
+				return ret;
+			}
+
+			if( v.is_string() == 0 )
+				Error(node->tok->pos, "'to_int' ‚É‚Í•¶š—ñ‚ğ“n‚µ‚Ä‚­‚¾‚³‚¢B");
+
+			string s;
+			for( auto &&i : v.list )
+			{
+				if( isdigit(i.v_Char) == 0 )
+					return ret;
+				//	Error(node->tok->pos, "”’l‚É•ÏŠ·‚Å‚«‚Ü‚¹‚ñB");
+
+				s += i.v_Char;
+			}
+
+			ret.v_Int = std::stoi(s);
 			return ret;
 		}
 

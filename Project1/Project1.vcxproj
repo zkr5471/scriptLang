@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="allocator.h" />
+    <ClInclude Include="error.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="runner.h" />
     <ClInclude Include="tokenize.h" />

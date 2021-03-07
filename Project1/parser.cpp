@@ -185,7 +185,7 @@ namespace Xscript
 				}
 			}
 
-			Error(g_tok->pos, "syntax error");
+			Error(g_tok->pos, "syntax error ");
 		}
 
 		Node *indexRef()
@@ -695,6 +695,7 @@ namespace Xscript
 				functions.push_back(func_nd);
 				prs_func = 0;
 
+				cur_func_args = nullptr;
 				return func_nd;
 			}
 
