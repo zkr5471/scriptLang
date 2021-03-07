@@ -50,6 +50,7 @@ namespace Xscript
 	{
 		static bool *LoopBreaked = nullptr;
 		static bool *LoopContinued = nullptr;
+		static bool func_returned = false;
 
 		if( node == nullptr )
 			return { };
@@ -62,6 +63,9 @@ namespace Xscript
 				{
 					run_stmt(i);
 					
+					if( func_returned )
+						break;
+
 					if( LoopBreaked && *LoopBreaked )
 						break;
 				}
@@ -96,27 +100,33 @@ namespace Xscript
 				break;
 			}
 
+			//case Node::Type::While:
+			//{
+			//	bool breaked = 0, continued = 0;;
+			//	bool *oldptr = LoopBreaked;
+			//	bool *oldptrc = LoopContinued;
+			//	LoopBreaked = &breaked;
+			//	LoopContinued = &continued;
+
+			//	while( run_expr(node->lhs).eval() )
+			//	{
+			//		continued = breaked = 0;
+			//		run_stmt(node->rhs);
+
+			//		if( func_returned )
+			//			break;
+
+			//		if( !continued && breaked )
+			//			break;
+			//	}
+
+			//	LoopBreaked = oldptr;
+			//	LoopContinued = oldptrc;
+			//	break;
+			//}
+
 			case Node::Type::While:
-			{
-				bool breaked = 0, continued = 0;;
-				bool *oldptr = LoopBreaked;
-				bool *oldptrc = LoopContinued;
-				LoopBreaked = &breaked;
-				LoopContinued = &continued;
-
-				while( run_expr(node->lhs).eval() )
-				{
-					continued = breaked = 0;
-					run_stmt(node->rhs);
-
-					if( !continued && breaked )
-						break;
-				}
-
-				LoopBreaked = oldptr;
-				LoopContinued = oldptrc;
 				break;
-			}
 
 			case Node::Type::For:
 			{
@@ -134,6 +144,9 @@ namespace Xscript
 
 					continued = breaked = 0;
 					run_stmt(node->lhs);
+
+					if( func_returned )
+						break;
 
 					if( !continued && breaked )
 						break;
@@ -165,6 +178,9 @@ namespace Xscript
 				for( ; index < node->list.size(); index++ )
 				{
 					run_stmt(node->list[index]);
+
+					if( func_returned )
+						break;
 
 					if( breaked )
 						break;
@@ -210,9 +226,14 @@ namespace Xscript
 					Error(node->tok->pos, "cannot use 'return' here");
 
 				*func_ret_val = run_expr(node->lhs);
+				func_returned = true;
+
 				*LoopBreaked = true;
 				break;
 			}
+
+			case Node::Type::Function:
+				break;
 
 			default:
 				return run_expr(node);
@@ -270,7 +291,7 @@ namespace Xscript
 					// change type for running node
 					func_nd->type = Node::Type::CallUserFunction;
 
-					auto ret = run_stmt(functions[find]);
+					auto ret = run_stmt(func_nd);
 
 					func_nd->type = Node::Type::Function; // restore type
 

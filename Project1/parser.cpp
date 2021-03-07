@@ -475,14 +475,18 @@ namespace Xscript
 
 			if( consume("while") )
 			{
-				expect("(");
-				Node *x = NewNode(Node::Type::While);
+				Node *x = NewNode(Node::Type::For);
 				x->tok = csm_tok;
-				x->lhs = expr();
+
+				x->list.push_back(nullptr);
+
+				expect("(");
+				x->list.push_back(expr());
 
 				expect(")");
-				x->rhs = stmt();
+				x->list.push_back(nullptr);
 
+				x->lhs = stmt();
 				return x;
 			}
 
@@ -697,10 +701,12 @@ namespace Xscript
 				{
 					Node *e = expr();
 					expect(";");
-					return NewNode(Node::Type::Return, e, nullptr);
+					return NewNode(Node::Type::Return, e, nullptr, csm_tok);
 				}
 
-				return NewNode(Node::Type::Return);
+				Node *x = NewNode(Node::Type::Return);
+				x->tok = csm_tok;
+				return x;
 			}
 
 			Node *x = expr();

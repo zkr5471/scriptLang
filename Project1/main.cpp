@@ -46,11 +46,28 @@ namespace Xscript {
 	extern std::vector<Value> variables;
 }
 
-int main()
+#define  TEST_BUILD  1
+
+int main(int argc, char **argv)
 {
+	#if TEST_BUILD == 0
+	if( argc == 1 )
+	{
+		std::cout << "no input files.\n";
+		return -1;
+	}
+	#endif
+
 	try
 	{
-		string src = std::move(openfile("C:/Users/mrzkr/Desktop/test.txt"));
+		string src = std::move(openfile(
+			#if TEST_BUILD
+			"C:/Users/mrzkr/Desktop/test.txt"
+			#else
+			argv[1]
+			#endif
+		));
+
 		Token *tok = tokenize(std::move(src));
 
 		Node *nd = Parser::parse(tok);
