@@ -167,13 +167,6 @@ namespace Xscript
 				break;
 			}
 
-			//case Node::Type::Case:
-			//{
-			//	run_stmt(node->rhs);
-
-			//	break;
-			//}
-
 			case Node::Type::Return:
 			{
 				if( func_ret_val == nullptr )
@@ -185,7 +178,6 @@ namespace Xscript
 			}
 
 			case Node::Type::Function:
-//			case Node::Type::While:
 				break;
 
 			default:
