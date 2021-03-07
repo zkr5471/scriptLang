@@ -46,12 +46,17 @@ namespace Xscript
 		}
 	}
 
+	namespace
+	{
+		bool *LoopBreaked = nullptr;
+		bool *LoopContinued = nullptr;
+		bool *func_returned = nullptr;
+
+	}
+
 	Value run_stmt(Node *node)
 	{
-		static bool *LoopBreaked = nullptr;
-		static bool *LoopContinued = nullptr;
-		static bool func_returned = false;
-
+		
 		if( node == nullptr )
 			return { };
 
@@ -63,7 +68,7 @@ namespace Xscript
 				{
 					run_stmt(i);
 					
-					if( func_returned )
+					if( func_returned  && *func_returned )
 						break;
 
 					if( LoopBreaked && *LoopBreaked )
@@ -145,7 +150,7 @@ namespace Xscript
 					continued = breaked = 0;
 					run_stmt(node->lhs);
 
-					if( func_returned )
+					if( func_returned && *func_returned )
 						break;
 
 					if( !continued && breaked )
@@ -197,28 +202,28 @@ namespace Xscript
 				break;
 			}
 
-			case Node::Type::CallUserFunction:
-			{
-				auto ptr = cur_func_node;
-				cur_func_node = node;
+			//case Node::Type::RunUserFunction:
+			//{
+			//	auto ptr = cur_func_node;
+			//	cur_func_node = node;
 
-				auto oldptr = LoopBreaked;
-				auto ret_ptr = func_ret_val;
-				
-				bool returned = 0;
-				LoopBreaked = &returned;
-				
-				Value ret;
-				func_ret_val = &ret;
+			//	auto oldptr = LoopBreaked;
+			//	auto ret_ptr = func_ret_val;
+			//	
+			//	bool returned = 0;
+			//	LoopBreaked = &returned;
+			//	
+			//	Value ret;
+			//	func_ret_val = &ret;
 
-				run_stmt(node->lhs);
+			//	run_stmt(node->lhs);
 
-				cur_func_node = ptr;
-				LoopBreaked = oldptr;
-				func_ret_val = ret_ptr;
-				
-				return ret;
-			}
+			//	cur_func_node = ptr;
+			//	LoopBreaked = oldptr;
+			//	func_ret_val = ret_ptr;
+			//	
+			//	return ret;
+			//}
 
 			case Node::Type::Return:
 			{
@@ -226,9 +231,7 @@ namespace Xscript
 					Error(node->tok->pos, "cannot use 'return' here");
 
 				*func_ret_val = run_expr(node->lhs);
-				func_returned = true;
-
-				*LoopBreaked = true;
+				*func_returned = true;
 				break;
 			}
 
@@ -289,17 +292,31 @@ namespace Xscript
 					}
 
 					// change type for running node
-					func_nd->type = Node::Type::CallUserFunction;
+				//	func_nd->type = Node::Type::CallUserFunction;
 
-					auto ret = run_stmt(func_nd);
+					auto oldptr = cur_func_node;
+					auto old_retptr = func_ret_val;
+					auto old_ret_flag_ptr = func_returned;
+					
+					bool returned = 0;
+					func_returned = &returned;
 
-					func_nd->type = Node::Type::Function; // restore type
+					cur_func_node = func_nd;
+					Value func_ret;
+					func_ret_val = &func_ret;
+					run_stmt(func_nd->lhs);
+
+					cur_func_node = oldptr;
+					func_ret_val = old_retptr;
+					func_returned = old_ret_flag_ptr;
+
+		//			func_nd->type = Node::Type::Function; // restore type
 
 					// restore params
 					for( size_t i = 0; i < func_nd->list.size(); i++ )
 						func_nd->list[i]->tok->value = bak[i];
 
-					return ret;
+					return func_ret;
 				}
 
 				// not found the user-defined function, try to execute built-in function

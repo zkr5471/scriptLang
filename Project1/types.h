@@ -100,7 +100,7 @@ namespace Xscript
 			Switch,
 			Case,
 
-			CallUserFunction,
+	//		RunUserFunction,
 			Function,
 			Param,
 			Return,
