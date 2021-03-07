@@ -13,12 +13,9 @@ namespace Xscript
 
 	int64_t find_func(string name)
 	{
-		int64_t index = 0;
-
-		for( auto &&i : functions ) {
-			if( i->tok->str == name ) return index;
-			index++;
-		}
+		for( size_t i = 0; i < functions.size(); i++ )
+			if( functions[i]->tok->str == name )
+				return i;
 
 		return -1;
 	}
