@@ -492,21 +492,24 @@ namespace Xscript
 
 			if( consume("do") )
 			{
-				Node *nd = NewNode(Node::Type::While);
+				Node *block = NewNode(Node::Type::Block);
 				
-				Node *s = NewNode(Node::Type::Block);
-				s->list.push_back(stmt());
-				
+				block->list.push_back(stmt());
 				expect("while");
 				expect("(");
-				s->list.push_back(NewNode(Node::Type::If, NewNode(Node::Type::Equal, expr(), NewNode_Int(0)), NewNode(Node::Type::Break)));
+				
+				block->list.push_back(NewNode(Node::Type::If, NewNode(Node::Type::Equal, expr(), NewNode_Int(0)), NewNode(Node::Type::Break)));
 				expect(")");
 				expect(";");
 
-				nd->lhs = NewNode_Int(1);
-				nd->rhs = s;
+				Node *x = NewNode(Node::Type::For);
+				x->list.push_back(nullptr);
+				x->list.push_back(NewNode_Int(1));
+				x->list.push_back(nullptr);
 
-				return nd;
+				x->lhs = block;
+
+				return x;
 			}
 
 			if( consume("for") )

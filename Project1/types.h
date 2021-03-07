@@ -93,7 +93,7 @@ namespace Xscript
 			If,
 			For,
 //			Foreach,
-			While,
+	//		While,
 			Break,
 			Continue,
 

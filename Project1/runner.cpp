@@ -105,9 +105,6 @@ namespace Xscript
 				break;
 			}
 
-			case Node::Type::While:
-				break;
-
 			case Node::Type::For:
 			{
 				bool breaked = 0, continued = 0;;
@@ -188,6 +185,7 @@ namespace Xscript
 			}
 
 			case Node::Type::Function:
+//			case Node::Type::While:
 				break;
 
 			default:
