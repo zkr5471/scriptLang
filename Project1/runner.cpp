@@ -11,6 +11,8 @@ namespace Xscript
 
 	namespace
 	{
+		std::vector<Value> func_params;
+
 		bool *LoopBreaked = nullptr;
 		bool *LoopContinued = nullptr;
 		bool *func_returned = nullptr;
@@ -98,19 +100,19 @@ namespace Xscript
 			return ret;
 		}
 
-		if( name == "get_args" )
-		{
-			if( cur_func_node == nullptr )
-				Error(node->tok->pos, "'get_args'を使用できるのは関数の中のみです。");
+		//if( name == "get_args" )
+		//{
+		//	if( cur_func_node == nullptr )
+		//		Error(node->tok->pos, "'get_args'を使用できるのは関数の中のみです。");
 
-			ret.type = Value::Type::Array;
-			for( auto &&i : cur_func_node->list )
-			{
-				ret.list.push_back(i->tok->value);
-			}
+		//	ret.type = Value::Type::Array;
+		//	for( auto &&i : cur_func_node->list )
+		//	{
+		//		ret.list.push_back(i->tok->value);
+		//	}
 
-			return ret;
-		}
+		//	return ret;
+		//}
 
 		if( name == "range" )
 		{
@@ -310,7 +312,10 @@ namespace Xscript
 
 			case Node::Type::Param:
 			{
-				auto& x = cur_func_node->list[node->varIndex]->tok->value;
+		//		printf("func_params.size() = %d, varIndex = %d\n", func_params.size(), node->varIndex);
+		//		return { };
+				
+				auto &x = func_params[func_params.size() - 1 - node->varIndex];
 				x.var_ptr = &x;
 				return x;
 			}
@@ -323,41 +328,33 @@ namespace Xscript
 				// if found
 				if( find != -1 )
 				{
-					Node *func_nd = functions[find];
+					auto func_nd = functions[find];
+					auto &params = node->list;
 
-					// no match paramater count
-					if( func_nd->list.size() != node->list.size() )
-						Error(node->tok->pos, "illegal call function '" + node->tok->str + "'");
-
-					// save params, and calc param to copy to list
-					std::vector<Value> bak;
-					for( size_t i = 0; i < func_nd->list.size(); i++ )
-					{
-						bak.push_back(func_nd->list[i]->tok->value);
-						func_nd->list[i]->tok->value = run_expr(node->list[i]);
-					}
+					if( params.size() != func_nd->list.size() )
+						Error(node->tok->pos, "'" + node->tok->str + "' の呼び出しに渡される引数が正しくありません");
 
 					// save pointers
-					auto oldptr = cur_func_node;
-					auto old_retptr = func_ret_val;
-					auto old_ret_flag_ptr = func_returned;
-					
+					auto func_ret_ptr = func_ret_val;
+					auto func_ret_flag = func_returned;
+
+					Value func_ret;
+					func_ret_val = &func_ret;
+
 					bool returned = 0;
 					func_returned = &returned;
 
-					cur_func_node = func_nd;
-					Value func_ret;
-					func_ret_val = &func_ret;
+					for( int64_t i = params.size() - 1; i >= 0; i-- )
+						func_params.push_back(run_expr(node->list[i]));
+
 					run_stmt(func_nd->lhs);
 
-					// restore pointers
-					cur_func_node = oldptr;
-					func_ret_val = old_retptr;
-					func_returned = old_ret_flag_ptr;
+					for( auto &&i : params )
+						func_params.pop_back();
 
-					// restore params
-					for( size_t i = 0; i < func_nd->list.size(); i++ )
-						func_nd->list[i]->tok->value = bak[i];
+					// restore pointers
+					func_ret_val = func_ret_ptr;
+					func_returned = func_ret_flag;
 
 					return func_ret;
 				}
