@@ -70,7 +70,7 @@ namespace Xscript
 			string name;
 
 			do {
-				name = Utils::GetRandomStr();
+				name = Utils::GetRandomStr(30, 40);
 			} while( find_variable(name) != -1 );
 
 			Value var;
