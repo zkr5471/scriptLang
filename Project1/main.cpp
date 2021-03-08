@@ -47,9 +47,20 @@ namespace Xscript {
 	extern std::vector<Value> variables;
 }
 
-#define  TEST_BUILD  1
+#define  TEST_BUILD  0
 
-bool OPTIONS::ignore_stack;
+namespace Xscript
+{
+	namespace Options
+	{
+		string input_file;
+
+		namespace Safety
+		{
+			bool stack = 1;
+		}
+	}
+}
 
 string operator "" _s(const char *s, size_t len)
 {
@@ -75,7 +86,7 @@ int main(int argc, char **argv)
 
 				if( argv[i] == "stack"_s )
 				{
-					OPTIONS::ignore_stack = 1;
+					Options::Safety::stack = 0;
 					i++;
 				}
 			}

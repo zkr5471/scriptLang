@@ -314,9 +314,6 @@ namespace Xscript
 
 			case Node::Type::Param:
 			{
-		//		printf("func_params.size() = %d, varIndex = %d\n", func_params.size(), node->varIndex);
-		//		return { };
-				
 				auto &x = func_params[func_params.size() - 1 - node->varIndex];
 				x.var_ptr = &x;
 				return x;
@@ -328,7 +325,7 @@ namespace Xscript
 				auto find = find_func(node->tok->str);
 				Value func_ret;
 
-				if( OPTIONS::ignore_stack == 0 )
+				if( Options::Safety::stack == 0 )
 				{
 					call_count++;
 
@@ -376,7 +373,7 @@ namespace Xscript
 					func_ret = run_builtin_func(node);
 				}
 
-				if( OPTIONS::ignore_stack == 0 )
+				if( Options::Safety::stack == 0 )
 				{
 					call_count--;
 				}

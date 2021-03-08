@@ -5,9 +5,15 @@
 
 #define  ERR_SEE_OPTION  "(このエラーはオプションによって無効化できます。-help コマンドを確認してください)"
 
-struct OPTIONS
+namespace Xscript
 {
-	static bool ignore_stack;
+	namespace Options
+	{
+		extern string input_file;
 
-
-};
+		namespace Safety
+		{
+			extern bool stack;
+		}
+	}
+}
