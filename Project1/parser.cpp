@@ -678,7 +678,7 @@ namespace Xscript
 							Error(g_tok->pos, "syntax error");
 
 						Node *nd = NewNode(Node::Type::Param);
-						nd->tok = NewToken();
+						nd->tok = NewToken(Token::Type::Ident);
 						nd->tok->value.name = g_tok->str;
 						nd->varIndex = p_index;
 						func_nd->list.push_back(nd);

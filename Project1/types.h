@@ -13,6 +13,7 @@ using std::string;
  }fprintf(stderr, " # %s:%zd\n", s, L); \
 }
 
+#define  DEBUG_MSG(msg)  fprintf(stderr,"%s:%s\n\t%s\n",__FILE__,__func__,msg)
 
 namespace Xscript
 {

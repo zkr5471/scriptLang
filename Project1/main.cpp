@@ -18,7 +18,7 @@ void print_token(Token *tok)
 	}
 }
 
-string openfile(const char *path)
+string openfile(string path)
 {
 	std::ifstream ifs(path);
 	string line, ret;
@@ -51,28 +51,20 @@ namespace Xscript {
 
 bool OPTIONS::ignore_stack;
 
-string operator "" s(const char *s, size_t len)
+string operator "" _s(const char *s, size_t len)
 {
 	return string(s, len);
 }
 
 int main(int argc, char **argv)
 {
-#if TEST_BUILD == 0
-	if( argc == 1 )
-	{
-		std::cout << "no input files.\n";
-		return -1;
-	}
-#endif
-
 	string input_file;
 
 	try
 	{
 		for( int i = 1; i < argc; )
 		{
-			if( argv[i] == "-ignore"s )
+			if( argv[i] == "-ignore"_s )
 			{
 				i++;
 				if( i >= argc )
@@ -81,13 +73,27 @@ int main(int argc, char **argv)
 					throw 0;
 				}
 
-				if( argv[i] == "stack"s )
+				if( argv[i] == "stack"_s )
 				{
 					OPTIONS::ignore_stack = 1;
 					i++;
 				}
 			}
+
+			else if( input_file.empty() )
+			{
+				input_file = argv[i];
+				i++;
+			}
 		}
+
+	#if TEST_BUILD == 0
+		if( input_file.empty() )
+		{
+			std::cout << "no input files.\n";
+			throw 0;
+		}
+	#endif
 
 		string src = std::move(openfile(
 		#if TEST_BUILD
