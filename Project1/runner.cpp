@@ -19,6 +19,8 @@ namespace Xscript
 
 		Node *cur_func_node;
 		Value *func_ret_val;
+		
+		size_t call_count;
 	}
 
 	int64_t find_func(string name)
@@ -324,6 +326,17 @@ namespace Xscript
 			{
 				// find user-defined function
 				auto find = find_func(node->tok->str);
+				Value func_ret;
+
+				if( OPTIONS::ignore_stack == 0 )
+				{
+					call_count++;
+
+					if( call_count >= 0x100 )
+					{
+						Error(node->tok->pos, "ä÷êîÇÃåƒÇ—èoÇµÇ™ê[Ç∑Ç¨Ç‹Ç∑ÅB" ERR_SEE_OPTION);
+					}
+				}
 
 				// if found
 				if( find != -1 )
@@ -338,7 +351,6 @@ namespace Xscript
 					auto func_ret_ptr = func_ret_val;
 					auto func_ret_flag = func_returned;
 
-					Value func_ret;
 					func_ret_val = &func_ret;
 
 					bool returned = 0;
@@ -356,12 +368,22 @@ namespace Xscript
 					func_ret_val = func_ret_ptr;
 					func_returned = func_ret_flag;
 
-					return func_ret;
+				//	return func_ret;
+				}
+				else
+				{
+					// not found the user-defined function, try to execute built-in function
+					func_ret = run_builtin_func(node);
 				}
 
-				// not found the user-defined function, try to execute built-in function
-				return run_builtin_func(node);
+				if( OPTIONS::ignore_stack == 0 )
+				{
+					call_count--;
+				}
+
+				return func_ret;
 			}
+
 
 			case Node::Type::MemberAccess:
 			{

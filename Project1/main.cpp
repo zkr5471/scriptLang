@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "runner.h"
 #include "allocator.h"
+#include "error.h"
 
 using namespace Xscript;
 
@@ -48,24 +49,52 @@ namespace Xscript {
 
 #define  TEST_BUILD  1
 
+bool OPTIONS::ignore_stack;
+
+string operator "" s(const char *s, size_t len)
+{
+	return string(s, len);
+}
+
 int main(int argc, char **argv)
 {
-	#if TEST_BUILD == 0
+#if TEST_BUILD == 0
 	if( argc == 1 )
 	{
 		std::cout << "no input files.\n";
 		return -1;
 	}
-	#endif
+#endif
+
+	string input_file;
 
 	try
 	{
+		for( int i = 1; i < argc; )
+		{
+			if( argv[i] == "-ignore"s )
+			{
+				i++;
+				if( i >= argc )
+				{
+					std::cout << "invalid option";
+					throw 0;
+				}
+
+				if( argv[i] == "stack"s )
+				{
+					OPTIONS::ignore_stack = 1;
+					i++;
+				}
+			}
+		}
+
 		string src = std::move(openfile(
-			#if TEST_BUILD
+		#if TEST_BUILD
 			"C:/Users/mrzkr/Desktop/test.txt"
-			#else
-			argv[1]
-			#endif
+		#else
+			input_file
+		#endif
 		));
 
 		Token *tok = tokenize(std::move(src));
